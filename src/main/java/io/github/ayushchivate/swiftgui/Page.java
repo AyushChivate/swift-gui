@@ -64,12 +64,24 @@ public class Page {
      * @param name the name of this page
      */
     protected Page(int pageNumber, int numberOfRows, @NotNull String name) {
+
+        /* make sure the page number and number of rows is positive */
+        if (pageNumber <= 0) {
+            throw new IllegalArgumentException("pageNumber cannot be less than or equal to zero. " +
+                    "Must be a positive integer");
+        } else if (numberOfRows <= 0) {
+            throw new IllegalArgumentException("numberOfRows cannot be less than or equal to zero. " +
+                    "Must be a positive multiple of 9.");
+        }
+
+        /* initialize fields */
         this.pageNumber = pageNumber;
         this.numberOfRows = numberOfRows;
         this.name = name;
         this.inventory = Bukkit.createInventory(null, numberOfRows * 9, name);
         this.inventoryHasNotBeenInitialized = name.equals("");
 
+        /* initialize default indexes */
         this.DEFAULT_BACK_BUTTON_INDEX = this.numberOfRows * 9 - 9;
         this.DEFAULT_FORWARD_BUTTON_INDEX = this.numberOfRows * 9 - 1;
         this.DEFAULT_NEW_PAGE_BUTTON_INDEX = this.numberOfRows * 9 - 4;

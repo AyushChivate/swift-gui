@@ -72,11 +72,12 @@ public class SwiftGui {
 
         this.pages = new HashMap<>();
 
-        /* prevent the number of rows or pages from being negative */
+        /* make sure the number of pages is zero or positive and the number of rows is positive */
         if (numberOfPages < 0) {
-            throw new IllegalArgumentException("numberOfPages cannot be negative");
+            throw new IllegalArgumentException("numberOfPages cannot be negative. Must be a positive integer.");
         } else if (numberOfRows <= 0) {
-            throw new IllegalArgumentException("numberOfRows must be a positive multiple of 9");
+            throw new IllegalArgumentException("numberOfRows cannot be less than or equal to zero. " +
+                    "Must be a positive multiple of 9.");
         }
 
         /* create pages and add them to the map */
