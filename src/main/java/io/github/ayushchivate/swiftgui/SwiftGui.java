@@ -44,9 +44,7 @@ public class SwiftGui {
     /**
      * Creates an empty SwiftGui with no pages.
      */
-    public SwiftGui() {
-        this(0, -1, "");
-    }
+    public SwiftGui() {}
 
     /**
      * Creates a SwiftGui with the specified number of pages.
@@ -73,9 +71,6 @@ public class SwiftGui {
     public SwiftGui(int numberOfPages, int numberOfRows, @NotNull String pagesName) {
 
         this.pages = new HashMap<>();
-
-        /* temporarily set number of rows to 1 if it is -1 */
-        if (numberOfRows == -1) numberOfRows = 1;
 
         /* prevent the number of rows or pages from being negative */
         if (numberOfPages < 0) {
@@ -132,6 +127,7 @@ public class SwiftGui {
      * @param player the player who's inventory should be opened
      */
     public void open(Player player) {
+        /* open the first page */
         Page page = this.pages.get(1);
         page.openInventory(player);
     }
@@ -171,9 +167,9 @@ public class SwiftGui {
 
         /* Number in ascending or descending order if needed */
         if (this.isAscending) {
-            page.numberAscendingOrder();
+            page.renameWithNumber(pageNumber);
         } else if (this.isDescending) {
-            page.numberDescendingOrder();
+            page.renameWithNumber(pageNumber);
         }
 
         return page;
@@ -224,9 +220,9 @@ public class SwiftGui {
 
             /* Number in ascending or descending order if needed */
             if (this.isAscending) {
-                page.numberAscendingOrder();
+                page.renameWithNumber(pageNumber);
             } else if (this.isDescending) {
-                page.numberDescendingOrder();
+                page.renameWithNumber(pageNumber);
             }
         }
 
@@ -270,27 +266,27 @@ public class SwiftGui {
     }
 
     /**
-     * Adds a forward button to all the pages in the default index which is the last slot of the last row.
+     * Adds a delete page button to all the pages in the default index which is the fourth slot of the last row.
      */
-    public void addForwardButtonAll() {
+    public void addDeletePageButtonAll() {
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().addForwardButton();
+            entry.getValue().addDeletePageButton();
         }
     }
 
     /**
-     * Adds a forward button to all the pages at the specified index.
+     * Adds a delete page button to all the pages at the specified index.
      *
      * @param index the index in the page where the button should appear
      */
-    public void addForwardButtonAll(int index) {
+    public void addDeletePageButtonAll(int index) {
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().addForwardButton(index);
+            entry.getValue().addDeletePageButton(index);
         }
     }
 
     /**
-     * Adds a new page button to all the pages in the default index which is the sixth index of the last row.
+     * Adds a new page button to all the pages in the default index which is the sixth slot of the last row.
      */
     public void addNewPageButtonAll() {
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
@@ -310,22 +306,22 @@ public class SwiftGui {
     }
 
     /**
-     * Adds a delete page button to all the pages in the default index which is the fourth index of the last row.
+     * Adds a forward button to all the pages in the default index which is the last slot of the last row.
      */
-    public void addDeletePageButtonAll() {
+    public void addForwardButtonAll() {
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().addDeletePageButton();
+            entry.getValue().addForwardButton();
         }
     }
 
     /**
-     * Adds a delete page button to all the pages at the specified index.
+     * Adds a forward button to all the pages at the specified index.
      *
      * @param index the index in the page where the button should appear
      */
-    public void addDeletePageButtonAll(int index) {
+    public void addForwardButtonAll(int index) {
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().addDeletePageButton(index);
+            entry.getValue().addForwardButton(index);
         }
     }
 
@@ -347,9 +343,9 @@ public class SwiftGui {
      * A dash and number will be added after the page name.
      */
     public void numberAscendingOrderAll() {
-        this.isAscendingOrder = true;
+        this.isAscending = true;
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().numberAscendingOrder();
+            entry.getValue().renameWithNumber(entry.getKey());
         }
     }
 
@@ -361,7 +357,7 @@ public class SwiftGui {
     public void numberDescendingOrderAll() {
         this.isDescending = true;
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().numberDescendingOrder();
+            entry.getValue().renameWithNumber(entry.getKey());
         }
     }
 
