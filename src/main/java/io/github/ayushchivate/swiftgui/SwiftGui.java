@@ -8,16 +8,38 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * TODO: Add page persistence when opening up a page. Make it an option.
+ * TODO: Make it so that the add page or delete button when alone is in the center but when both are added, put a
+ *  space between them.
+ * TODO: Add a gui menu in game to make menus.
+ * TODO: Add saving features.
+ */
+
 /**
  * A container class that holds multiple pages.
  */
 public class SwiftGui {
 
     /**
-     * A map of pages and their page number in this SwiftGui
+     * A map of pages and their corresponding page number in this SwiftGui.
      */
     private Map<Integer, Page> pages;
+
+    /**
+     * An instance of the plugin used to register events.
+     */
     private static JavaPlugin plugin;
+
+    /**
+     *  Determines if this SwiftGui is in ascending order.
+     */
+    private boolean isAscending = false;
+
+    /**
+     *  Determines if this SwiftGui is in descending order.
+     */
+    private boolean isDescending = false;
 
     /**
      * Creates an empty SwiftGui with no pages.
@@ -68,12 +90,50 @@ public class SwiftGui {
         }
     }
 
+    /**
+     * Sets the instance of the plugin.
+     *
+     * @param plugin the instance of the plugin
+     */
     public static void setPluginInstance(JavaPlugin plugin) {
         SwiftGui.plugin = plugin;
     }
 
-    public static JavaPlugin getPluginInstance() {
+    /**
+     * Get the instance of the plugin.
+     *
+     * @return the instance of the plugin
+     */
+    protected static JavaPlugin getPluginInstance() {
         return plugin;
+    }
+
+    /**
+     * Gets if this SwiftGui is in ascending order or not.
+     *
+     * @return the ascending order status
+     */
+    protected boolean isAscending() {
+        return isAscending;
+    }
+
+    /**
+     * Gets if this SwiftGui is in descending order or not.
+     *
+     * @return the descending order status
+     */
+    protected boolean isDescending() {
+        return isDescending;
+    }
+
+    /**
+     * Opens the inventory for the specified player
+     *
+     * @param player the player who's inventory should be opened
+     */
+    public void open(Player player) {
+        Page page = this.pages.get(1);
+        page.openInventory(player);
     }
 
     /**
@@ -97,13 +157,25 @@ public class SwiftGui {
      */
     public Page addNewPage(int numberOfRows, @NotNull String pageName) {
 
+        /* Make sure the number of rows is valid */
         if (numberOfRows <= 0) {
             throw new IllegalArgumentException("numberOfRows must be a positive multiple of 9");
         }
 
+        /* the page number of the new page is the current size of the map plus 1 */
         int pageNumber = this.pages.size() + 1;
+
+        /* create a page and put it in the map */
         Page page = new Page(pageNumber, numberOfRows, pageName);
         this.pages.put(pageNumber, page);
+
+        /* Number in ascending or descending order if needed */
+        if (this.isAscending) {
+            page.numberAscendingOrder();
+        } else if (this.isDescending) {
+            page.numberDescendingOrder();
+        }
+
         return page;
     }
 
@@ -141,10 +213,21 @@ public class SwiftGui {
 
         /* create pages and add them to the map */
         for (int i = 0; i < numberOfPages; i++) {
+
+            /* the page number of the new page is the current size of the map plus 1 */
             int pageNumber = this.pages.size() + 1;
+
+            /* create a page and put it in the map and array */
             Page page = new Page(pageNumber, numberOfRows, pagesName);
             this.pages.put(pageNumber, page);
             addedPages[i] = page;
+
+            /* Number in ascending or descending order if needed */
+            if (this.isAscending) {
+                page.numberAscendingOrder();
+            } else if (this.isDescending) {
+                page.numberDescendingOrder();
+            }
         }
 
         return addedPages;
@@ -167,11 +250,12 @@ public class SwiftGui {
     }
 
     /**
-     * Adds a back button to all the pages in the default index which is the first index of the last row.
+     * Adds a back button to all the pages in the default index which is the first slot of the last row.
      */
     public void addBackButtonAll() {
-        /* have a isConsistent field in page to see if all inventories have the same amount of rows, only then can you call this method without an index. */
-        addBackButtonAll();
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addBackButton();
+        }
     }
 
     /**
@@ -180,14 +264,18 @@ public class SwiftGui {
      * @param index the index in the page where the button should appear
      */
     public void addBackButtonAll(int index) {
-        BackButton backButton = new BackButton(index, Material.ARROW);
-        /*add button to pages*/
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addBackButton(index);
+        }
     }
 
     /**
-     * Adds a forward button to all the pages in the default index which is the first index of the last row.
+     * Adds a forward button to all the pages in the default index which is the last slot of the last row.
      */
     public void addForwardButtonAll() {
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addForwardButton();
+        }
     }
 
     /**
@@ -196,12 +284,18 @@ public class SwiftGui {
      * @param index the index in the page where the button should appear
      */
     public void addForwardButtonAll(int index) {
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addForwardButton(index);
+        }
     }
 
     /**
-     * Adds a new page button to all the pages in the default index which is the first index of the last row.
+     * Adds a new page button to all the pages in the default index which is the sixth index of the last row.
      */
     public void addNewPageButtonAll() {
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addNewPageButton();
+        }
     }
 
     /**
@@ -210,12 +304,18 @@ public class SwiftGui {
      * @param index the index in the page where the button should appear
      */
     public void addNewPageButtonAll(int index) {
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addNewPageButton(index);
+        }
     }
 
     /**
-     * Adds a delete page button to all the pages in the default index which is the first index of the last row.
+     * Adds a delete page button to all the pages in the default index which is the fourth index of the last row.
      */
     public void addDeletePageButtonAll() {
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addDeletePageButton();
+        }
     }
 
     /**
@@ -224,6 +324,9 @@ public class SwiftGui {
      * @param index the index in the page where the button should appear
      */
     public void addDeletePageButtonAll(int index) {
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addDeletePageButton(index);
+        }
     }
 
     /**
@@ -233,6 +336,9 @@ public class SwiftGui {
      * @param index        the index in the page where the button should appear
      */
     public void addCustomButtonAll(CustomButton customButton, int index) {
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().addCustomButton(customButton, index);
+        }
     }
 
     /**
@@ -241,6 +347,10 @@ public class SwiftGui {
      * A dash and number will be added after the page name.
      */
     public void numberAscendingOrderAll() {
+        this.isAscendingOrder = true;
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().numberAscendingOrder();
+        }
     }
 
     /**
@@ -249,10 +359,14 @@ public class SwiftGui {
      * A dash and number will be added after the page name.
      */
     public void numberDescendingOrderAll() {
+        this.isDescending = true;
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().numberDescendingOrder();
+        }
     }
 
     /**
-     * All the pages will be filled with the specified material according to the border pattern
+     * Fills all pages with the specified material according to the border pattern
      *
      * @param borderPattern The pattern corresponding to which indexes should be filled.
      *                      1 means that index will be filled with the fillMaterial,
@@ -260,14 +374,8 @@ public class SwiftGui {
      * @param fillMaterial  the material that will be used to fill the border
      */
     public void fillBorderAll(int[] borderPattern, Material fillMaterial) {
+        for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
+            entry.getValue().fillBorder(borderPattern, fillMaterial);
+        }
     }
-
-    public void open(Player player) {
-        Page page = this.pages.get(1);
-        page.openInventory(player);
-    }
-
-
-    /* TODO: Add page persistence when opening up a page*/
-
 }

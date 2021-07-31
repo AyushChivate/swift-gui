@@ -13,6 +13,11 @@ public class Page {
     private String name;
     private Inventory inventory;
 
+    private final int DEFAULT_BACK_BUTTON_INDEX;
+    private final int DEFAULT_FORWARD_BUTTON_INDEX;
+    private final int DEFAULT_NEW_PAGE_BUTTON_INDEX;
+    private final int DEFAULT_DELETE_PAGE_BUTTON_INDEX;
+
     private boolean inventoryHasNotBeenInitialized;
 
     protected Page(int pageNumber, int numberOfRows, @NotNull String name) {
@@ -21,6 +26,11 @@ public class Page {
         this.name = name;
         this.inventory = Bukkit.createInventory(null, numberOfRows * 9, name);
         this.inventoryHasNotBeenInitialized = name.equals("");
+
+        this.DEFAULT_BACK_BUTTON_INDEX = this.numberOfRows * 9 - 9;
+        this.DEFAULT_FORWARD_BUTTON_INDEX = this.numberOfRows * 9 - 1;
+        this.DEFAULT_NEW_PAGE_BUTTON_INDEX = this.numberOfRows * 9 - 4;
+        this.DEFAULT_DELETE_PAGE_BUTTON_INDEX = this.numberOfRows * 9 - 6;
     }
 
     protected void openInventory(Player player) {
@@ -36,6 +46,16 @@ public class Page {
      * @param fillMaterial  the material that will be used to fill the border
      * @param page          the page which will have its border filled
      */
-    public void fillBorder(int[] borderPattern, Material fillMaterial, Page page) {
+    public void fillBorder(int[] borderPattern, Material fillMaterial) {
+
+    }
+
+    public void addBackButton() {
+        addBackButton(this.DEFAULT_BACK_BUTTON_INDEX);
+    }
+
+    public void addBackButton(int index) {
+
+
     }
 }
