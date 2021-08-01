@@ -168,9 +168,9 @@ public class SwiftGui {
 
         /* Number in ascending or descending order if needed */
         if (this.isAscending) {
-            page.renameWithNumber(pageNumber);
+            page.renameAscending();
         } else if (this.isDescending) {
-            page.renameWithNumber(pageNumber);
+            page.renameDescending(this.pages.size());
         }
 
         return page;
@@ -221,9 +221,9 @@ public class SwiftGui {
 
             /* Number in ascending or descending order if needed */
             if (this.isAscending) {
-                page.renameWithNumber(pageNumber);
+                page.renameAscending();
             } else if (this.isDescending) {
-                page.renameWithNumber(pageNumber);
+                page.renameDescending(this.pages.size());
             }
         }
 
@@ -334,7 +334,7 @@ public class SwiftGui {
      */
     public void addCustomButtonAll(CustomButton customButton, int index) {
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().addCustomButton(customButton, index);
+            entry.getValue().addCustomButton(customButton);
         }
     }
 
@@ -346,7 +346,7 @@ public class SwiftGui {
     public void numberAscendingOrderAll() {
         this.isAscending = true;
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().renameWithNumber(entry.getKey());
+            entry.getValue().renameAscending();
         }
     }
 
@@ -358,7 +358,7 @@ public class SwiftGui {
     public void numberDescendingOrderAll() {
         this.isDescending = true;
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().renameWithNumber(entry.getKey());
+            entry.getValue().renameDescending(this.pages.size());
         }
     }
 
@@ -370,7 +370,7 @@ public class SwiftGui {
      *                      while 0 means that index will be left untouched.
      * @param fillMaterial  the material that will be used to fill the border
      */
-    public void fillBorderAll(int[] borderPattern, Material fillMaterial) {
+    public void fillBorderAll(int[][] borderPattern, Material fillMaterial) {
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
             entry.getValue().fillBorder(borderPattern, fillMaterial);
         }

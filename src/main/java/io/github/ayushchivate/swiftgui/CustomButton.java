@@ -8,8 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public abstract class CustomButton implements Listener {
 
-    int index;
-    Material material;
+    private int index;
+    private Material material;
 
     public CustomButton(int index, Material material) {
 
@@ -21,6 +21,14 @@ public abstract class CustomButton implements Listener {
 
         this.index = index;
         this.material = material;
+    }
+
+    protected int getIndex() {
+        return index;
+    }
+
+    protected Material getMaterial() {
+        return material;
     }
 
     @EventHandler
