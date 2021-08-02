@@ -14,10 +14,11 @@ import java.util.Map;
  *  space between them.
  * TODO: Add a gui menu in game to make menus.
  * TODO: Add saving features.
+ * TODO: Colored titles.
  */
 
 /**
- * A container class that holds multiple pages.
+ * A container class that contains many pages.
  */
 public class SwiftGui {
 
@@ -32,19 +33,20 @@ public class SwiftGui {
     private static JavaPlugin plugin;
 
     /**
-     *  Determines if this SwiftGui is in ascending order.
+     * Determines if this SwiftGui is in ascending order.
      */
     private boolean isAscending = false;
 
     /**
-     *  Determines if this SwiftGui is in descending order.
+     * Determines if this SwiftGui is in descending order.
      */
     private boolean isDescending = false;
 
     /**
      * Creates an empty SwiftGui with no pages.
      */
-    public SwiftGui() {}
+    public SwiftGui() {
+    }
 
     /**
      * Creates a SwiftGui with the specified number of pages.
@@ -82,7 +84,7 @@ public class SwiftGui {
 
         /* create pages and add them to the map */
         for (int i = 1; i <= numberOfPages; i++) {
-            this.pages.put(i, new Page(i, numberOfRows, pagesName));
+            this.pages.put(i, new Page(i, numberOfRows, pagesName, this));
         }
     }
 
@@ -149,7 +151,7 @@ public class SwiftGui {
      * The page will have the name that is specified.
      *
      * @param numberOfRows the number of rows in the page
-     * @param pageName the name of the page
+     * @param pageName     the name of the page
      * @return the page that was added
      */
     public Page addNewPage(int numberOfRows, @NotNull String pageName) {
@@ -163,7 +165,7 @@ public class SwiftGui {
         int pageNumber = this.pages.size() + 1;
 
         /* create a page and put it in the map */
-        Page page = new Page(pageNumber, numberOfRows, pageName);
+        Page page = new Page(pageNumber, numberOfRows, pageName, this);
         this.pages.put(pageNumber, page);
 
         /* Number in ascending or descending order if needed */
@@ -181,7 +183,7 @@ public class SwiftGui {
      * The pages do not have a name and must be set at some point.
      *
      * @param numberOfPages the number of pages to be added
-     * @param numberOfRows the number of rows in the pages
+     * @param numberOfRows  the number of rows in the pages
      * @return a list of the pages that were created
      */
     public Page[] addNewPages(int numberOfPages, int numberOfRows) {
@@ -193,8 +195,8 @@ public class SwiftGui {
      * The pages will have the name that is specified.
      *
      * @param numberOfPages the number of pages to be added
-     * @param numberOfRows the number of rows in the pages
-     * @param pagesName the name for all the pages that are added
+     * @param numberOfRows  the number of rows in the pages
+     * @param pagesName     the name for all the pages that are added
      * @return a list of the pages that were created
      */
     public Page[] addNewPages(int numberOfPages, int numberOfRows, @NotNull String pagesName) {
@@ -215,7 +217,7 @@ public class SwiftGui {
             int pageNumber = this.pages.size() + 1;
 
             /* create a page and put it in the map and array */
-            Page page = new Page(pageNumber, numberOfRows, pagesName);
+            Page page = new Page(pageNumber, numberOfRows, pagesName, this);
             this.pages.put(pageNumber, page);
             addedPages[i] = page;
 
@@ -238,7 +240,7 @@ public class SwiftGui {
     public Page[] getAllPages() {
 
         Page[] allPages = new Page[this.pages.size()];
-        
+
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
             allPages[entry.getKey()] = entry.getValue();
         }

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class Page {
 
     /**
-     * The page number of this page.
+     * A class that represents a page.
      */
     private int pageNumber;
 
@@ -31,6 +31,11 @@ public class Page {
      * The inventory of this page.
      */
     private Inventory inventory;
+
+    /**
+     * Instance of the SwiftGui.
+     */
+    private SwiftGui swiftGui;
 
     /**
      * The default index of the back button.
@@ -64,7 +69,7 @@ public class Page {
      * @param numberOfRows the number of rows of this page
      * @param name         the name of this page
      */
-    protected Page(int pageNumber, int numberOfRows, @NotNull String name) {
+    protected Page(int pageNumber, int numberOfRows, @NotNull String name, SwiftGui swiftGui) {
 
         /* make sure the page number and number of rows is positive */
         if (pageNumber <= 0) {
@@ -80,6 +85,7 @@ public class Page {
         this.numberOfRows = numberOfRows;
         this.name = name;
         this.inventory = Bukkit.createInventory(null, numberOfRows * 9, name);
+        this.swiftGui = swiftGui;
         this.inventoryHasNotBeenInitialized = name.equals("");
 
         /* initialize default indexes */
@@ -109,8 +115,9 @@ public class Page {
      * @param index the index in the page where the button should appear.
      */
     public void addBackButton(int index) {
+        /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.ARROW));
-        CustomButton backButton = new BackButton(index, Material.ARROW);
+        CustomButton backButton = new BackButton(index, Material.ARROW, this.swiftGui);
     }
 
     /**
@@ -126,14 +133,16 @@ public class Page {
      * @param index the index in the page where the button should appear.
      */
     public void addDeletePageButton(int index) {
+        /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.TNT));
-        CustomButton deletePageButton = new DeletePageButton(index, Material.TNT);
+        CustomButton deletePageButton = new DeletePageButton(index, Material.TNT, this.swiftGui);
     }
 
     /**
      * Adds a new page button to this page in the default index which is the sixth slot of the last row.
      */
     public void addNewPageButton() {
+        /* set the button's item in the inventory and make a button. */
         addNewPageButton(this.DEFAULT_NEW_PAGE_BUTTON_INDEX);
     }
 
@@ -143,14 +152,16 @@ public class Page {
      * @param index the index in the page where the button should appear.
      */
     public void addNewPageButton(int index) {
+        /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.PAPER));
-        CustomButton newPageButton = new NewPageButton(index, Material.PAPER);
+        CustomButton newPageButton = new NewPageButton(index, Material.PAPER, this.swiftGui);
     }
 
     /**
      * Adds a forward button to this page in the default index which is the last slot of the last row.
      */
     public void addForwardButton() {
+        /* set the button's item in the inventory and make a button. */
         addForwardButton(this.DEFAULT_FORWARD_BUTTON_INDEX);
     }
 
@@ -160,8 +171,9 @@ public class Page {
      * @param index the index in the page where the button should appear.
      */
     public void addForwardButton(int index) {
+        /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.ARROW));
-        CustomButton forwardButton = new ForwardButton(index, Material.ARROW);
+        CustomButton forwardButton = new ForwardButton(index, Material.ARROW, this.swiftGui);
     }
 
     /**
@@ -170,6 +182,7 @@ public class Page {
      * @param customButton the type of button to be added
      */
     public void addCustomButton(CustomButton customButton) {
+        /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(customButton.getIndex(), new ItemStack(customButton.getMaterial()));
     }
 
@@ -218,11 +231,9 @@ public class Page {
     public void fillBorder(int[][] borderPattern, Material fillMaterial) {
 
         /* make sure the border pattern has the same dimensions as this page */
-
         if (borderPattern.length != this.numberOfRows) {
             throw new IllegalArgumentException("borderPattern must have the same number of rows as the page");
         }
-
         for (int[] row : borderPattern) {
             if (row.length != 9) {
                 throw new IllegalArgumentException("borderPattern must have the same number of columns as the page");
