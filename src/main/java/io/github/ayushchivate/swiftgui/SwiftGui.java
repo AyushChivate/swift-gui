@@ -15,6 +15,7 @@ import java.util.Map;
  * TODO: Add a gui menu in game to make menus.
  * TODO: Add saving features.
  * TODO: Colored titles.
+ * TODO: Make sure all privacy modifiers are correct
  */
 
 /**
@@ -102,7 +103,7 @@ public class SwiftGui {
      *
      * @return the instance of the plugin
      */
-    protected static JavaPlugin getPluginInstance() {
+    static JavaPlugin getPluginInstance() {
         return plugin;
     }
 
@@ -111,7 +112,7 @@ public class SwiftGui {
      *
      * @return the ascending order status
      */
-    protected boolean isAscending() {
+    boolean isAscending() {
         return isAscending;
     }
 
@@ -120,7 +121,7 @@ public class SwiftGui {
      *
      * @return the descending order status
      */
-    protected boolean isDescending() {
+    boolean isDescending() {
         return isDescending;
     }
 

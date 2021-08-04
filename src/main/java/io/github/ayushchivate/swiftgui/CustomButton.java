@@ -5,6 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /* An abstract class that represents a user-defined button */
 public abstract class CustomButton implements Listener {
@@ -19,14 +21,22 @@ public abstract class CustomButton implements Listener {
      */
     private Material material;
 
+    /**
+     * The SwiftGui this button belongs to.
+     */
     SwiftGui swiftGui;
+
+    /**
+     * The page this button belongs to.
+     */
+    Page page;
 
     /**
      * Creates a page with the specified index, material, and SwiftGui.
      *
      * @param index the index position of the button
      * @param material the material that represents the button
-     * @param swiftGui the instance of the SwiftGui this button will be in
+     * @param swiftGui the instance of the SwiftGui this button is in
      */
     public CustomButton(int index, Material material, SwiftGui swiftGui) {
 
@@ -47,15 +57,24 @@ public abstract class CustomButton implements Listener {
     /**
      * Get the index of the button.
      */
-    protected int getIndex() {
+    int getIndex() {
         return index;
     }
 
     /**
      * Get the material of the button.
      */
-    protected Material getMaterial() {
+    Material getMaterial() {
         return material;
+    }
+
+    /**
+     * Set the page this button belongs to.
+     *
+     * @param page the page this button belongs to
+     */
+    void setPage(Page page) {
+        this.page = page;
     }
 
     /**
@@ -73,9 +92,28 @@ public abstract class CustomButton implements Listener {
     @EventHandler
     private void checkForButtonPress(InventoryClickEvent event) {
 
-        /* check for button press */
+        /* check if the player clicked in the inventory this button is in */
+        String thisInventoryName = this.page.getName();
+        String otherInventoryName = event.getView().getTitle();
+        if (!thisInventoryName.equals(otherInventoryName)) {
+            return;
+        }
 
+        /* check if the player clicked on the index of this button */
+        if (this.index != event.getSlot()) {
+            return;
+        }
 
+        /* check if the item the player clicked is the same item as this button */
+        ItemStack itemStack = event.getCurrentItem();
+        if (itemStack == null) {
+            return;
+        }
+        if (this.material != event.getCurrentItem().getType()) {
+            return;
+        }
+
+        /* execute user-defined code */
         onClick(event);
     }
 }

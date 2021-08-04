@@ -7,6 +7,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Represents a page in a SwiftGui
  */
@@ -69,7 +72,7 @@ public class Page {
      * @param numberOfRows the number of rows of this page
      * @param name         the name of this page
      */
-    protected Page(int pageNumber, int numberOfRows, @NotNull String name, SwiftGui swiftGui) {
+    Page(int pageNumber, int numberOfRows, @NotNull String name, SwiftGui swiftGui) {
 
         /* make sure the page number and number of rows is positive */
         if (pageNumber <= 0) {
@@ -96,9 +99,16 @@ public class Page {
     }
 
     /**
+     * Get the name of this page.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
      * Opens this page's inventory for the specified player.
      */
-    protected void openInventory(Player player) {
+    void openInventory(Player player) {
         player.openInventory(this.inventory);
     }
 
@@ -118,6 +128,8 @@ public class Page {
         /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.ARROW));
         CustomButton backButton = new BackButton(index, Material.ARROW, this.swiftGui);
+        /* set the button's page to this page */
+        backButton.setPage(this);
     }
 
     /**
@@ -136,6 +148,8 @@ public class Page {
         /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.TNT));
         CustomButton deletePageButton = new DeletePageButton(index, Material.TNT, this.swiftGui);
+        /* set the button's page to this page */
+        deletePageButton.setPage(this);
     }
 
     /**
@@ -155,6 +169,8 @@ public class Page {
         /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.PAPER));
         CustomButton newPageButton = new NewPageButton(index, Material.PAPER, this.swiftGui);
+        /* set the button's page to this page */
+        newPageButton.setPage(this);
     }
 
     /**
@@ -174,6 +190,8 @@ public class Page {
         /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.ARROW));
         CustomButton forwardButton = new ForwardButton(index, Material.ARROW, this.swiftGui);
+        /* set the button's page to this page */
+        forwardButton.setPage(this);
     }
 
     /**
@@ -184,13 +202,15 @@ public class Page {
     public void addCustomButton(CustomButton customButton) {
         /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(customButton.getIndex(), new ItemStack(customButton.getMaterial()));
+        /* set the button's page to this page */
+        customButton.setPage(this);
     }
 
     /**
      * Numbers this page in ascending order in correspondence to the other pages in the SwiftGui.
      * A dash followed by the page number is appended to the page name.
      */
-    protected void renameAscending() {
+    void renameAscending() {
 
         /* change the page name */
         this.name = this.name + " - " + this.pageNumber;
@@ -207,7 +227,7 @@ public class Page {
      * Numbers this page in descending order in correspondence to the other pages in the SwiftGui.
      * A dash followed by the page number is appended to the page name.
      */
-    protected void renameDescending(int size) {
+    void renameDescending(int size) {
 
         /* change the page name */
         this.name = this.name + " - " + (size - this.pageNumber);

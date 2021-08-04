@@ -10,7 +10,7 @@ public class ForwardButton extends CustomButton {
      *
      * @param index    the index position of the button
      * @param material the material that represents the button
-     * @param swiftGui the instance of the SwiftGui this button will be in
+     * @param swiftGui the instance of the SwiftGui this button is in
      */
     public ForwardButton(int index, Material material, SwiftGui swiftGui) {
         super(index, material, swiftGui);
