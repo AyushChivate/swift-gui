@@ -8,15 +8,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
- * TODO: Add page persistence when opening up a page. Make it an option.
- * TODO: Make it so that the add page or delete button when alone is in the center but when both are added, put a
- *  space between them.
- * TODO: Add a gui menu in game to make menus.
- * TODO: Add saving features.
- * TODO: Colored titles.
- * TODO: Make sure all privacy modifiers are correct
- */
+// TODO Add page persistence when opening up a page. Make it an option.
+// TODO Make it so that the add page or delete button when alone is in the center but when both are added, put a space between them.
+// TODO Add a gui menu in game to make menus.
+// TODO Add saving features.
+// TODO Colored titles.
+// TODO Make sure all privacy modifiers are correct
+// TODO Make an option to insert the new page before of after the current page.
+// TODO Make sure all javadocs are correct.
+// TODO Parameter checks for all methods.
 
 /**
  * A container class that contains many pages.
@@ -107,6 +107,17 @@ public class SwiftGui {
         return plugin;
     }
 
+    Map<Integer, Page> getPages() {
+        return pages;
+    }
+
+    /**
+     * Returns the size of this SwiftGui.
+     */
+    int size() {
+        return this.pages.size();
+    }
+
     /**
      * Gets if this SwiftGui is in ascending order or not.
      *
@@ -141,6 +152,7 @@ public class SwiftGui {
      * The page does not have a name, so it must be set separately.
      *
      * @param numberOfRows the number of rows in the page
+     *
      * @return the page that was added
      */
     public Page addNewPage(int numberOfRows) {
@@ -153,6 +165,7 @@ public class SwiftGui {
      *
      * @param numberOfRows the number of rows in the page
      * @param pageName     the name of the page
+     *
      * @return the page that was added
      */
     public Page addNewPage(int numberOfRows, @NotNull String pageName) {
@@ -173,7 +186,7 @@ public class SwiftGui {
         if (this.isAscending) {
             page.renameAscending();
         } else if (this.isDescending) {
-            page.renameDescending(this.pages.size());
+            page.renameDescending();
         }
 
         return page;
@@ -226,7 +239,7 @@ public class SwiftGui {
             if (this.isAscending) {
                 page.renameAscending();
             } else if (this.isDescending) {
-                page.renameDescending(this.pages.size());
+                page.renameDescending();
             }
         }
 
@@ -361,7 +374,7 @@ public class SwiftGui {
     public void numberDescendingOrderAll() {
         this.isDescending = true;
         for (Map.Entry<Integer, Page> entry : this.pages.entrySet()) {
-            entry.getValue().renameDescending(this.pages.size());
+            entry.getValue().renameDescending();
         }
     }
 

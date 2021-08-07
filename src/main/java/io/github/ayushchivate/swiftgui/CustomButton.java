@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /* An abstract class that represents a user-defined button */
@@ -34,7 +33,7 @@ public abstract class CustomButton implements Listener {
     /**
      * Creates a page with the specified index, material, and SwiftGui.
      *
-     * @param index the index position of the button
+     * @param index    the index position of the button
      * @param material the material that represents the button
      * @param swiftGui the instance of the SwiftGui this button is in
      */
@@ -105,11 +104,11 @@ public abstract class CustomButton implements Listener {
         }
 
         /* check if the item the player clicked is the same item as this button */
-        ItemStack itemStack = event.getCurrentItem();
-        if (itemStack == null) {
+        ItemStack clickedItemStack = event.getCurrentItem();
+        if (clickedItemStack == null) {
             return;
         }
-        if (this.material != event.getCurrentItem().getType()) {
+        if (this.material != clickedItemStack.getType()) {
             return;
         }
 

@@ -1,7 +1,10 @@
 package io.github.ayushchivate.swiftgui;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.Map;
 
 public class BackButton extends CustomButton {
 
@@ -23,6 +26,31 @@ public class BackButton extends CustomButton {
      */
     @Override
     public void onClick(InventoryClickEvent event) {
-        this.swiftGui = null;
+
+        Player player;
+
+        try {
+            /* get the player */
+            player = (Player) event.getWhoClicked();
+        } catch (ClassCastException e) {
+            return;
+        }
+
+        /* get the map of pages*/
+        Map<Integer, Page> pages = this.swiftGui.getPages();
+
+        /* get the page number of the previous page */
+        int previousPageNumber = this.page.getPageNumber() - 1;
+
+        /* get the previous page using the previous page's page number as a key */
+        Page previousPage = pages.get(previousPageNumber);
+
+        /* make sure the previous page exists */
+        if (previousPage == null) {
+            return;
+        }
+
+        /* open the previous page for the player */
+        previousPage.openInventory(player);
     }
 }

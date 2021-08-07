@@ -7,9 +7,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Represents a page in a SwiftGui
  */
@@ -23,7 +20,7 @@ public class Page {
     /**
      * The number of rows the inventory has in this page.
      */
-    private int numberOfRows;
+    private final int NUMBER_OF_ROWS;
 
     /**
      * The name of the inventory in this page.
@@ -38,7 +35,7 @@ public class Page {
     /**
      * Instance of the SwiftGui.
      */
-    private SwiftGui swiftGui;
+    private final SwiftGui SWIFT_GUI;
 
     /**
      * The default index of the back button.
@@ -60,49 +57,64 @@ public class Page {
      */
     private final int DEFAULT_FORWARD_BUTTON_INDEX;
 
-    /**
-     * Shows weather or not the inventory object has been set with
-     */
-    private boolean inventoryHasNotBeenInitialized;
+//    /**
+//     * Shows whether or not the page has been set with an inventory.
+//     */
+//    private boolean inventoryHasNotBeenInitialized;
 
     /**
      * Creates a page with the specified page number, number of rows, and name.
      *
-     * @param pageNumber   the page number of this page
-     * @param numberOfRows the number of rows of this page
-     * @param name         the name of this page
+     * @param pageNumber     the page number of this page
+     * @param NUMBER_OF_ROWS the number of rows of this page
+     * @param name           the name of this page
      */
-    Page(int pageNumber, int numberOfRows, @NotNull String name, SwiftGui swiftGui) {
+    Page(int pageNumber, int NUMBER_OF_ROWS, @NotNull String name, SwiftGui SWIFT_GUI) {
 
         /* make sure the page number and number of rows is positive */
         if (pageNumber <= 0) {
             throw new IllegalArgumentException("pageNumber cannot be less than or equal to zero. " +
                     "Must be a positive integer");
-        } else if (numberOfRows <= 0) {
+        } else if (NUMBER_OF_ROWS <= 0) {
             throw new IllegalArgumentException("numberOfRows cannot be less than or equal to zero. " +
                     "Must be a positive multiple of 9.");
         }
 
         /* initialize fields */
         this.pageNumber = pageNumber;
-        this.numberOfRows = numberOfRows;
+        this.NUMBER_OF_ROWS = NUMBER_OF_ROWS;
         this.name = name;
-        this.inventory = Bukkit.createInventory(null, numberOfRows * 9, name);
-        this.swiftGui = swiftGui;
-        this.inventoryHasNotBeenInitialized = name.equals("");
+        this.inventory = Bukkit.createInventory(null, NUMBER_OF_ROWS * 9, name);
+        this.SWIFT_GUI = SWIFT_GUI;
+//        this.inventoryHasNotBeenInitialized = name.equals("");
 
         /* initialize default indexes */
-        this.DEFAULT_BACK_BUTTON_INDEX = this.numberOfRows * 9 - 9;
-        this.DEFAULT_FORWARD_BUTTON_INDEX = this.numberOfRows * 9 - 1;
-        this.DEFAULT_NEW_PAGE_BUTTON_INDEX = this.numberOfRows * 9 - 4;
-        this.DEFAULT_DELETE_PAGE_BUTTON_INDEX = this.numberOfRows * 9 - 6;
+        this.DEFAULT_BACK_BUTTON_INDEX = this.NUMBER_OF_ROWS * 9 - 9;
+        this.DEFAULT_FORWARD_BUTTON_INDEX = this.NUMBER_OF_ROWS * 9 - 1;
+        this.DEFAULT_NEW_PAGE_BUTTON_INDEX = this.NUMBER_OF_ROWS * 9 - 4;
+        this.DEFAULT_DELETE_PAGE_BUTTON_INDEX = this.NUMBER_OF_ROWS * 9 - 6;
     }
 
     /**
      * Get the name of this page.
+     *
+     * @return the name of this page
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Gets the page number of this page.
+     *
+     * @return the page number of this page
+     */
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
     }
 
     /**
@@ -125,9 +137,10 @@ public class Page {
      * @param index the index in the page where the button should appear.
      */
     public void addBackButton(int index) {
-        /* set the button's item in the inventory and make a button. */
+        /* set the button's item in the inventory and make a button */
         this.inventory.setItem(index, new ItemStack(Material.ARROW));
-        CustomButton backButton = new BackButton(index, Material.ARROW, this.swiftGui);
+        /* make a button */
+        CustomButton backButton = new BackButton(index, Material.ARROW, this.SWIFT_GUI);
         /* set the button's page to this page */
         backButton.setPage(this);
     }
@@ -147,7 +160,7 @@ public class Page {
     public void addDeletePageButton(int index) {
         /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.TNT));
-        CustomButton deletePageButton = new DeletePageButton(index, Material.TNT, this.swiftGui);
+        CustomButton deletePageButton = new DeletePageButton(index, Material.TNT, this.SWIFT_GUI);
         /* set the button's page to this page */
         deletePageButton.setPage(this);
     }
@@ -168,7 +181,7 @@ public class Page {
     public void addNewPageButton(int index) {
         /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.PAPER));
-        CustomButton newPageButton = new NewPageButton(index, Material.PAPER, this.swiftGui);
+        CustomButton newPageButton = new NewPageButton(index, Material.PAPER, this.SWIFT_GUI);
         /* set the button's page to this page */
         newPageButton.setPage(this);
     }
@@ -189,7 +202,7 @@ public class Page {
     public void addForwardButton(int index) {
         /* set the button's item in the inventory and make a button. */
         this.inventory.setItem(index, new ItemStack(Material.ARROW));
-        CustomButton forwardButton = new ForwardButton(index, Material.ARROW, this.swiftGui);
+        CustomButton forwardButton = new ForwardButton(index, Material.ARROW, this.SWIFT_GUI);
         /* set the button's page to this page */
         forwardButton.setPage(this);
     }
@@ -218,7 +231,7 @@ public class Page {
         /* get the contents of the old inventory*/
         ItemStack[] contents = this.inventory.getContents();
         /* reassign this page's inventory to a new inventory*/
-        this.inventory = Bukkit.createInventory(null, this.numberOfRows, this.name);
+        this.inventory = Bukkit.createInventory(null, this.NUMBER_OF_ROWS, this.name);
         /* populate new inventory with the old inventory's materials */
         this.inventory.addItem(contents);
     }
@@ -227,15 +240,15 @@ public class Page {
      * Numbers this page in descending order in correspondence to the other pages in the SwiftGui.
      * A dash followed by the page number is appended to the page name.
      */
-    void renameDescending(int size) {
+    void renameDescending() {
 
         /* change the page name */
-        this.name = this.name + " - " + (size - this.pageNumber);
+        this.name = this.name + " - " + (this.SWIFT_GUI.size() - this.pageNumber);
 
         /* get the contents of the old inventory*/
         ItemStack[] contents = this.inventory.getContents();
         /* reassign this page's inventory to a new inventory*/
-        this.inventory = Bukkit.createInventory(null, this.numberOfRows, this.name);
+        this.inventory = Bukkit.createInventory(null, this.NUMBER_OF_ROWS, this.name);
         /* populate new inventory with the old inventory's materials */
         this.inventory.addItem(contents);
     }
@@ -251,7 +264,7 @@ public class Page {
     public void fillBorder(int[][] borderPattern, Material fillMaterial) {
 
         /* make sure the border pattern has the same dimensions as this page */
-        if (borderPattern.length != this.numberOfRows) {
+        if (borderPattern.length != this.NUMBER_OF_ROWS) {
             throw new IllegalArgumentException("borderPattern must have the same number of rows as the page");
         }
         for (int[] row : borderPattern) {
@@ -263,7 +276,7 @@ public class Page {
         /* get the contents of the old inventory*/
         ItemStack[] contents = this.inventory.getContents();
         /* reassign this page's inventory to a new inventory*/
-        this.inventory = Bukkit.createInventory(null, this.numberOfRows, this.name);
+        this.inventory = Bukkit.createInventory(null, this.NUMBER_OF_ROWS, this.name);
 
         /* fill the border */
         int index = 0;
